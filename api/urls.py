@@ -1,4 +1,4 @@
-from django.urls import path 
+from django.urls import path,include
 from . import views
 
 from rest_framework_simplejwt.views import (
@@ -13,6 +13,8 @@ urlpatterns =[
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # api routes
     path('', view=views.index, name="api_index"),
-    path('protected', view=views.protected_route, name="protected")
+    path('protected', view=views.protected_route, name="protected"),
+    # tasks 
+    path('task/', include('task.urls'))
 
 ]
