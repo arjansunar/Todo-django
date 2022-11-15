@@ -11,3 +11,5 @@ def index(request):
 @permission_classes([IsAuthenticated])
 def protected_route(request): 
     return Response({"message": 'you can access resource'})
+
+

@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     "corsheaders",
     # local apps 
-    'api'
+    'api',
+    'task'
 ]
 
 REST_FRAMEWORK = {
