@@ -39,9 +39,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third party apps
     'rest_framework',
+    'rest_framework_simplejwt',
     # local apps 
     'api'
 ]
+
+REST_FRAMEWORK = {
+    
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+    
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
