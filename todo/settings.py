@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # third party apps
     'rest_framework',
     'rest_framework_simplejwt',
+    "corsheaders",
     # local apps 
     'api'
 ]
@@ -54,6 +55,10 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    # cors begin
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    # cors end
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -135,3 +140,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Todo change it later
+CORS_ALLOW_ALL_ORIGINS = True
