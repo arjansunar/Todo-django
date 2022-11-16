@@ -14,7 +14,9 @@ const initialCredentialState = {
 
 export const Login = () => {
   const [credentials, setCredentials] = useState(() => initialCredentialState);
-  const { login, tokens } = useContext(AuthContext) as AuthContextType;
+  const { login, tokens, setTokens } = useContext(
+    AuthContext
+  ) as AuthContextType;
 
   const navigate = useNavigate();
 
@@ -31,7 +33,10 @@ export const Login = () => {
 
   const handleUserSubmission = async (e: FormEvent) => {
     e.preventDefault();
-    await login(credentials);
+    const tokens = await login(credentials);
+    if (tokens) setTokens(tokens);
+    console.log("new tokens", tokens);
+    navigate("/");
   };
 
   useEffect(() => {

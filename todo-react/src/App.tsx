@@ -8,8 +8,8 @@ function App() {
   return (
     <Routes>
       <Route element={<ProtectedRoutes />}>
+        {/* <Route path="/" element={<div>Home</div>} /> */}
         <Route path="/task" element={<TaskListContainer />} />
-        <Route path="/" element={<div>Home</div>} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />

@@ -1,9 +1,16 @@
-import { createContext, FC, ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import axios from "axios";
 
 export interface AuthContextType {
   tokens: AuthToken;
-  login: (credentials: Credentials) => Promise<void>;
+  login: (credentials: Credentials) => Promise<AuthToken | undefined>;
   logout: () => void;
   setTokens: React.Dispatch<React.SetStateAction<AuthToken>>;
 }
@@ -28,7 +35,7 @@ const login = async (credentials: Credentials) => {
       credentials
     );
     localStorage.setItem("todo_token", JSON.stringify(data));
-    console.log(data);
+    return data as AuthToken;
   } catch (error) {
     console.error(error);
   }
@@ -44,6 +51,12 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [tokens, setTokens] = useState<AuthToken>(null);
+  const updateTokens = useCallback(
+    (newTokens: AuthToken) => {
+      setTokens(newTokens);
+    },
+    [tokens]
+  );
 
   useEffect(() => {
     const localToken = getLocalToken();
