@@ -3,6 +3,6 @@ from . import views
 
 urlpatterns =[
     # read routes
-    path('list/',  view=views.get_all_tasks, name="list_task"),
-    path('detail/<str:pk>/', view=views.get_task,name="single_task")
+    path('list/',  view=views.ListCreateTask.as_view(), name="list_task"),
+    path('detail/<str:pk>/', view=views.TaskDetailUpdateDestroyView.as_view(),name="single_task")
 ]
