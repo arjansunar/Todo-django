@@ -1,15 +1,16 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from .models import Task
+from rest_framework.permissions import DjangoModelPermissions
 from django.shortcuts import  get_object_or_404
 from django.http import Http404
-from .serializers import TaskSerializer
 import json
 
 from rest_framework import generics
 
+from .serializers import TaskSerializer
+from .models import Task
+from .permissions import UserCanModifyOwnTask
 # Create your views here.
 
 # read tasks
@@ -56,5 +57,5 @@ class ListCreateTask(generics.ListCreateAPIView):
 # get detail, delete and update task
 class TaskDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializer
-    permission_classes= []
+    permission_classes= [DjangoModelPermissions, UserCanModifyOwnTask]
     queryset =  Task.objects.all()
