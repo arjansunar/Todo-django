@@ -1,6 +1,6 @@
-import React from "react";
+import { ReactNode, FC } from "react";
 
-export const Loading = ({ children }) => {
+export const Loading: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <div className=" text-sm flex h-screen  items-center justify-center">
       {children}
