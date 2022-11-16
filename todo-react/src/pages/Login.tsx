@@ -1,4 +1,6 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import { AuthContext, AuthContextType } from "../provider";
+import { useNavigate } from "react-router-dom";
 
 const initError = {
   message: "",
@@ -9,8 +11,12 @@ const initialCredentialState = {
   username: "",
   password: "",
 };
+
 export const Login = () => {
   const [credentials, setCredentials] = useState(() => initialCredentialState);
+  const { login, tokens } = useContext(AuthContext) as AuthContextType;
+
+  const navigate = useNavigate();
 
   const setUsername = (username: string) => {
     setCredentials((prev) => ({ ...prev, username }));
@@ -25,18 +31,15 @@ export const Login = () => {
 
   const handleUserSubmission = async (e: FormEvent) => {
     e.preventDefault();
-    alert(JSON.stringify(credentials));
-    // call api after verification
-    // try {
-    //   await createUser(user);
-    //   router.push(`/todo/${user}`);
-    // } catch (error) {
-    //   if (error.response.data?.status == "P2002") {
-    //     router.push(`/todo/${user}`);
-    //   }
-    //   console.error(error);
-    // }
+    await login(credentials);
   };
+
+  useEffect(() => {
+    console.log(tokens);
+    if (tokens && tokens?.access && tokens?.refresh) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className=" bg-gray-200 text-gray-800 flex flex-col  items-center h-screen pt-24  ">

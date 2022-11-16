@@ -1,13 +1,15 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 
-export const BackBtn = ({ dark }) => {
+export const BackBtn = ({ dark }: { dark?: boolean }) => {
+  const navigate = useNavigate();
   return (
     <button
       className={`${
         dark ? "text-white" : ""
       } absolute top-2 left-4 hover:underline`}
+      onClick={() => navigate("/")}
     >
-      <a href="/" className="flex items-center justify-center gap-2">
+      <span className="flex items-center justify-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -23,7 +25,7 @@ export const BackBtn = ({ dark }) => {
           />
         </svg>
         <span>back</span>
-      </a>
+      </span>
     </button>
   );
 };
