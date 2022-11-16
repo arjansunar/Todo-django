@@ -28,6 +28,7 @@ const taskList: Task[] = [
 ];
 export const TaskListContainer = () => {
   const [task, setTask] = useState("");
+  console.log(task);
 
   const handleCreateTodo = () => {
     // mutate(

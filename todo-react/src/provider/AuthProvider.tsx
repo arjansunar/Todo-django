@@ -13,6 +13,7 @@ export interface AuthContextType {
   login: (credentials: Credentials) => Promise<AuthToken | undefined>;
   logout: () => void;
   setTokens: React.Dispatch<React.SetStateAction<AuthToken>>;
+  isAuth: boolean;
 }
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -51,12 +52,7 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [tokens, setTokens] = useState<AuthToken>(null);
-  const updateTokens = useCallback(
-    (newTokens: AuthToken) => {
-      setTokens(newTokens);
-    },
-    [tokens]
-  );
+  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
     const localToken = getLocalToken();
@@ -66,8 +62,16 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (!!tokens && tokens.access.length > 0) {
+      setIsAuth(true);
+    } else {
+      setIsAuth(false);
+    }
+  }, [tokens]);
+
   return (
-    <AuthContext.Provider value={{ tokens, login, logout, setTokens }}>
+    <AuthContext.Provider value={{ tokens, login, logout, setTokens, isAuth }}>
       {children}
     </AuthContext.Provider>
   );
