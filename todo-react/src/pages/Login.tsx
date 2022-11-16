@@ -14,9 +14,11 @@ const initialCredentialState = {
 
 export const Login = () => {
   const [credentials, setCredentials] = useState(() => initialCredentialState);
-  const { login, tokens, setTokens } = useContext(
+  const { login, tokens, setTokens, isAuth } = useContext(
     AuthContext
   ) as AuthContextType;
+
+  console.log("Login page ");
 
   const navigate = useNavigate();
 
@@ -36,15 +38,14 @@ export const Login = () => {
     const tokens = await login(credentials);
     if (tokens) setTokens(tokens);
     console.log("new tokens", tokens);
-    navigate("/");
+    navigate("/task");
   };
 
   useEffect(() => {
-    console.log(tokens);
-    if (tokens && tokens?.access && tokens?.refresh) {
-      navigate("/");
+    if (isAuth) {
+      navigate("/task");
     }
-  }, []);
+  }, [isAuth]);
 
   return (
     <div className=" bg-gray-200 text-gray-800 flex flex-col  items-center h-screen pt-24  ">

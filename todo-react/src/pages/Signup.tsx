@@ -1,4 +1,6 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext, AuthContextType } from "../provider";
 
 const initError = {
   message: "",
@@ -11,7 +13,9 @@ const initialCredentialState = {
 };
 export const Signup = () => {
   const [credentials, setCredentials] = useState(() => initialCredentialState);
+  const { isAuth } = useContext(AuthContext) as AuthContextType;
 
+  const navigate = useNavigate();
   const setUsername = (username: string) => {
     setCredentials((prev) => ({ ...prev, username }));
   };
@@ -37,6 +41,11 @@ export const Signup = () => {
     //   console.error(error);
     // }
   };
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/");
+    }
+  }, [isAuth]);
 
   return (
     <div className=" bg-gray-200 text-gray-800 flex flex-col  items-center h-screen pt-24  ">

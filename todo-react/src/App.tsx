@@ -13,12 +13,13 @@ function App() {
     <div>
       <LogoutButton />
       <Routes>
-        <Route element={<ProtectedRoutes />}>
-          <Route path="/" element={<div>Home</div>} />
-          <Route path="/task" element={<div>task</div>} />
-        </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/task" element={<TaskListContainer />} />
+          <Route path="/test" element={<div>test</div>} />
+          {/* <Route path="/" element={<div>Home</div>} /> */}
+        </Route>
         <Route path="*" element={<Error message="Page not found" />} />
       </Routes>
     </div>
