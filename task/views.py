@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import DjangoModelPermissions, DjangoModelPermissionsOrAnonReadOnly
+from rest_framework.permissions import DjangoModelPermissions,IsAuthenticated
 from django.shortcuts import  get_object_or_404
 from django.http import Http404
 import json
@@ -35,6 +35,7 @@ from .permissions import UserCanModifyOwnTask
 """gets list of task made by the user according to user id in JWT token"""
 class ListCreateTask(generics.ListCreateAPIView):
     serializer_class= TaskSerializer
+    permission_classes= [IsAuthenticated]
 
     # custom query set to return the list of task created by the user 
     def get_queryset(self):
@@ -57,5 +58,5 @@ class ListCreateTask(generics.ListCreateAPIView):
 # get detail, delete and update task
 class TaskDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializer
-    permission_classes= [DjangoModelPermissions, UserCanModifyOwnTask]
+    permission_classes= [IsAuthenticated, DjangoModelPermissions, UserCanModifyOwnTask]
     queryset =  Task.objects.all()
