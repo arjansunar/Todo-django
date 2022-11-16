@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import DjangoModelPermissions
+from rest_framework.permissions import DjangoModelPermissions, DjangoModelPermissionsOrAnonReadOnly
 from django.shortcuts import  get_object_or_404
 from django.http import Http404
 import json
@@ -25,11 +25,11 @@ from .permissions import UserCanModifyOwnTask
 #     serializer = TaskSerializer(tasks, many = True)
 #     return Response({"tasks": serializer.data})
 
-@api_view(['GET'])
-def get_task(request, pk): 
-    task = get_object_or_404(Task,pk=pk)
-    serializer = TaskSerializer(task)
-    return Response({"task": serializer.data})
+# @api_view(['GET'])
+# def get_task(request, pk): 
+#     task = get_object_or_404(Task,pk=pk)
+#     serializer = TaskSerializer(task)
+#     return Response({"task": serializer.data})
 
 # generic class based views 
 """gets list of task made by the user according to user id in JWT token"""
