@@ -3,6 +3,6 @@
 ## Features
 
 - [x] User authentication
-- [ ] User roles
-- [ ] Normal and mod users (mod can edit their todo)
-- [ ] Todo features
+- [x] User roles
+- [x] Normal and mod users (mod can edit their todo)
+- [x] Todo features
