@@ -18,8 +18,6 @@ export const Login = () => {
     AuthContext
   ) as AuthContextType;
 
-  console.log("Login page ");
-
   const navigate = useNavigate();
 
   const setUsername = (username: string) => {

@@ -1,0 +1,8 @@
+# ignore react application
+todo-react
+
+.gitignore
+
+README.md
+
+.*
