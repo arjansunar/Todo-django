@@ -6,4 +6,4 @@
 - [x] User roles
 - [x] Normal and mod users (mod can edit their todo)
 - [x] Todo features
-- [] Dockerize DRF api
+- [x] Dockerize DRF api
