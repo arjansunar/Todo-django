@@ -73,11 +73,15 @@ export const TaskItem: FC<TaskItemProps> = ({ task }) => {
   };
 
   const handleDelete = async () => {
-    await deleteTask(tokens?.access!, task.id);
-    deleteTaskFromTasksState({
-      id: task.id,
-      setTasks,
-    });
+    try {
+      await deleteTask(tokens?.access!, task.id);
+      deleteTaskFromTasksState({
+        id: task.id,
+        setTasks,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return task ? (
     <li className="flex justify-between items-center mt-3">

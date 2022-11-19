@@ -35,14 +35,13 @@ const fetcher = async ({ url, method, token }: GetFetcherProps) => {
 
 const deleteFetcher = async ({ url, token }: DeleteFetcherProps) => {
   try {
-    const { data } = await axios.delete(`${BACKEND_URL}/${url}`, {
+    await axios.delete(`${BACKEND_URL}/${url}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return data;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };
 

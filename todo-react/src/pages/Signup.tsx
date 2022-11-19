@@ -1,5 +1,6 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { register } from "../api-utils";
 import { AuthContext, AuthContextType } from "../provider";
 
 const initError = {
@@ -10,6 +11,7 @@ const initError = {
 const initialCredentialState = {
   username: "",
   password: "",
+  email: "",
 };
 export const Signup = () => {
   const [credentials, setCredentials] = useState(() => initialCredentialState);
@@ -23,23 +25,22 @@ export const Signup = () => {
     setCredentials((prev) => ({ ...prev, password }));
   };
 
+  const setEmail = (email: string) =>
+    setCredentials((prev) => ({ ...prev, email }));
+
   const isValid = () => {
     return credentials.username.length && credentials.password.length;
   };
 
   const handleUserSubmission = async (e: FormEvent) => {
     e.preventDefault();
-    alert(JSON.stringify(credentials));
-    // call api after verification
-    // try {
-    //   await createUser(user);
-    //   router.push(`/todo/${user}`);
-    // } catch (error) {
-    //   if (error.response.data?.status == "P2002") {
-    //     router.push(`/todo/${user}`);
-    //   }
-    //   console.error(error);
-    // }
+
+    try {
+      await register(credentials);
+    } catch (error) {
+      alert(JSON.stringify(error));
+    }
+    navigate("/login");
   };
   useEffect(() => {
     if (isAuth) {
@@ -67,6 +68,12 @@ export const Signup = () => {
             placeholder="password"
             className=" rounded-sm shadow-sm px-4 py-2 border border-gray-200 w-full mt-4"
             onChange={(e) => setPassword(e.target.value)}
+          />
+          <input
+            type="email"
+            placeholder="email"
+            className=" rounded-sm shadow-sm px-4 py-2 border border-gray-200 w-full mt-4"
+            onChange={(e) => setEmail(e.target.value)}
           />
           <button
             className="px-6 py-1 bg-black text-gray-100 disabled:bg-gray-400 rounded mt-5 max-w-fit self-end "
