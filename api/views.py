@@ -1,7 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny,IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer, RegisterUserSerialier
+from django.contrib.auth.models import User
+
 
 # Create your views here.
 @api_view(['GET'])
@@ -12,6 +14,11 @@ def index(request):
 @permission_classes([IsAuthenticated])
 def protected_route(request): 
     return Response({"message": 'you can access resource'})
+
+@api_view()
+def is_mod(request):
+    user = request.user
+    return Response({"is_mod": user.groups.filter(name='mod').exists()})
 
 @api_view(['POST'])
 def signup(request): 

@@ -17,5 +17,6 @@ urlpatterns =[
     path('protected', view=views.protected_route, name="protected"),
     # tasks 
     path('task/', include('task.urls')),
+    path('permissions/', view=views.is_mod, name="get_permissions")
     
 ]
