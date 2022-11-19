@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   createContext,
   FC,
@@ -10,39 +9,15 @@ import {
 import { Task } from "../pages";
 import { AuthContext, AuthContextType } from "./AuthProvider";
 
+// fetchers
+import { fetchTasks } from "../api-utils";
+
 export interface TaskContextType {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
 export const TaskContext = createContext<TaskContextType | null>(null);
-
-interface FetcherProps {
-  url: string;
-  method: "get" | "post" | "delete" | "patch";
-  token: string;
-}
-const fetcher = async ({ url, method, token }: FetcherProps) => {
-  try {
-    const { data } = await axios[method](`${BACKEND_URL}/${url}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const fetchTasks = async (token: string) =>
-  await fetcher({
-    url: "task/list/",
-    method: "get",
-    token,
-  });
 
 export const TaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [tasks, setTasks] = useState<Task[]>([]);

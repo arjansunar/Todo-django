@@ -1,10 +1,43 @@
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { Task } from "../pages";
+
+// fetchers
+import { createTask } from "../api-utils";
+import { TaskContext, TaskContextType } from "../provider/TaskProvider";
+import { AuthContext, AuthContextType } from "../provider";
 
 export const TaskInputContainer: FC = () => {
   const [task, setTask] = useState("");
+  const { tasks, setTasks } = useContext(TaskContext) as TaskContextType;
+  const { tokens } = useContext(AuthContext) as AuthContextType;
 
-  const handleCreateTodo = () => {
+  const addToTasksState = (task: Task) => {
+    setTasks((list) => {
+      return [...list, task];
+    });
+  };
+
+  const updateTasksState = (task: Task) => {
+    const taskIndex = tasks.findIndex((el) => (el.id = task.id));
+    console.log("taskIndex", taskIndex);
+    if (taskIndex >= 0) {
+      setTasks((list) => {
+        list[taskIndex] = task;
+        return list;
+      });
+    }
+  };
+
+  const handleCreateTodo = async () => {
+    if (task.length < 1) return;
+    try {
+      const newTask = await createTask(tokens?.access!, { title: task });
+      addToTasksState(newTask);
+      console.log({ newTask });
+    } catch (error) {
+      console.log(error);
+    }
+
     setTask("");
   };
   return (
@@ -50,6 +83,7 @@ export const TaskItem: FC<TaskItemProps> = ({ task }) => {
     //   },
     //   { revalidate: false }
     // );
+    console.log("hello task update");
     setCompleted(!completed);
   };
 
