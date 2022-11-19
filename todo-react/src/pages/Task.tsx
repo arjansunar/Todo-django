@@ -20,22 +20,6 @@ export interface Task {
   created_at: string;
 }
 
-// const taskList: Task[] = [
-//   {
-//     id: 2,
-//     title: "learn drf",
-//     completed: false,
-//     created_at: "2022-11-15T09:14:33.026685Z",
-//     user: 2,
-//   },
-//   {
-//     id: 9,
-//     title: "new task test3",
-//     completed: false,
-//     created_at: "2022-11-16T02:46:44.244055Z",
-//     user: 2,
-//   },
-// ];
 export const TaskListContainer = () => {
   return (
     <TaskProvider>

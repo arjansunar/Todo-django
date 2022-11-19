@@ -2,38 +2,25 @@ import { FC, useContext, useState } from "react";
 import { Task } from "../pages";
 
 // fetchers
-import { createTask } from "../api-utils";
+import { createTask, deleteTask, patchTask } from "../api-utils";
 import { TaskContext, TaskContextType } from "../provider/TaskProvider";
 import { AuthContext, AuthContextType } from "../provider";
+import {
+  addToTasksState,
+  deleteTaskFromTasksState,
+  updateTasksState,
+} from "./state-updaters";
 
 export const TaskInputContainer: FC = () => {
   const [task, setTask] = useState("");
-  const { tasks, setTasks } = useContext(TaskContext) as TaskContextType;
+  const { setTasks } = useContext(TaskContext) as TaskContextType;
   const { tokens } = useContext(AuthContext) as AuthContextType;
-
-  const addToTasksState = (task: Task) => {
-    setTasks((list) => {
-      return [...list, task];
-    });
-  };
-
-  const updateTasksState = (task: Task) => {
-    const taskIndex = tasks.findIndex((el) => (el.id = task.id));
-    console.log("taskIndex", taskIndex);
-    if (taskIndex >= 0) {
-      setTasks((list) => {
-        list[taskIndex] = task;
-        return list;
-      });
-    }
-  };
 
   const handleCreateTodo = async () => {
     if (task.length < 1) return;
     try {
       const newTask = await createTask(tokens?.access!, { title: task });
-      addToTasksState(newTask);
-      console.log({ newTask });
+      addToTasksState({ task: newTask, setTasks });
     } catch (error) {
       console.log(error);
     }
@@ -69,35 +56,28 @@ export const TaskInputContainer: FC = () => {
 interface TaskItemProps {
   task: Task;
 }
+
 export const TaskItem: FC<TaskItemProps> = ({ task }) => {
   const [completed, setCompleted] = useState(task.completed);
-  const handleUpdate = () => {
-    // call the api and revalidates cache
-    // mutate(
-    //   `/api/user/${user}`,
-    //   async (todos) => {
-    //     const { data: updatedTodo } = await todoUpdater(todo.id, !done);
-    //     const index = todos.findIndex((el) => el.id === todo.id);
-    //     todos[index] = updatedTodo;
-    //     return [...todos];
-    //   },
-    //   { revalidate: false }
-    // );
-    console.log("hello task update");
+  const { tasks, setTasks } = useContext(TaskContext) as TaskContextType;
+  const { tokens } = useContext(AuthContext) as AuthContextType;
+
+  const handleUpdate = async () => {
+    const updatedTask = await patchTask(tokens?.access!, {
+      ...task,
+      completed: !completed,
+    });
+    updateTasksState({ tasks, setTasks, task: updatedTask });
+    console.log("task updated", updatedTask);
     setCompleted(!completed);
   };
 
-  const handleDelete = () => {
-    // call the api and revalidates cache
-    // mutate(
-    //   `/api/user/${user}`,
-    //   async (todos) => {
-    //     todoDeleter(todo.id);
-    //     const filteredTodos = todos.filter((el) => el.id !== todo.id);
-    //     return [...filteredTodos];
-    //   },
-    //   { revalidate: false }
-    // );
+  const handleDelete = async () => {
+    await deleteTask(tokens?.access!, task.id);
+    deleteTaskFromTasksState({
+      id: task.id,
+      setTasks,
+    });
   };
   return task ? (
     <li className="flex justify-between items-center mt-3">

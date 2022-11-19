@@ -18,9 +18,24 @@ export interface GetFetcherProps extends FetcherProps {
   method: "get";
 }
 
+interface DeleteFetcherProps extends Omit<FetcherProps, "method"> {}
+
 const fetcher = async ({ url, method, token }: GetFetcherProps) => {
   try {
     const { data } = await axios[method](`${BACKEND_URL}/${url}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteFetcher = async ({ url, token }: DeleteFetcherProps) => {
+  try {
+    const { data } = await axios.delete(`${BACKEND_URL}/${url}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -69,4 +84,26 @@ export const createTask = async (token: string, task: Partial<Task>) => {
     token,
     data: task,
   })) as Task;
+};
+
+// patch tasks
+export const patchTask = async (
+  token: string,
+  task: Partial<Task> & { id: number }
+) => {
+  const { id, ...rest } = task;
+  return (await mutateFetcher({
+    url: `task/detail/${id}/`,
+    method: "patch",
+    token,
+    data: rest,
+  })) as Task;
+};
+
+// deleted a task
+export const deleteTask = async (token: string, id: number) => {
+  await deleteFetcher({
+    url: `task/detail/${id}/`,
+    token,
+  });
 };
