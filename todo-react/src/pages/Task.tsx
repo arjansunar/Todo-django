@@ -1,4 +1,4 @@
-import { FC, useContext } from "react";
+import { Children, FC, useContext } from "react";
 import {
   BackBtn,
   Error,
@@ -6,6 +6,7 @@ import {
   TaskInputContainer,
   TaskItem,
 } from "../components";
+import { AuthContext, AuthContextType } from "../provider";
 import {
   TaskContext,
   TaskContextType,
@@ -40,11 +41,22 @@ export const TaskListContainer = () => {
               <TaskInputContainer />
               <TaskLists />
             </ul>
+            <ModMessage />
           </div>
         </div>
       </div>
     </TaskProvider>
   );
+};
+
+const ModMessage: FC = () => {
+  const { isMod } = useContext(AuthContext) as AuthContextType;
+  return !isMod ? (
+    <div className="text-xs font-mono text-red-400 bg-red-100 rounded text-center px-2 py-1 w-fit mx-auto mt-4">
+      {" "}
+      You need "mod" privilages to edit and delete task
+    </div>
+  ) : null;
 };
 
 const TaskLists: FC = () => {

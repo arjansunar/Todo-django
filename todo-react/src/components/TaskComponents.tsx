@@ -60,7 +60,7 @@ interface TaskItemProps {
 export const TaskItem: FC<TaskItemProps> = ({ task }) => {
   const [completed, setCompleted] = useState(task.completed);
   const { tasks, setTasks } = useContext(TaskContext) as TaskContextType;
-  const { tokens } = useContext(AuthContext) as AuthContextType;
+  const { tokens, isMod } = useContext(AuthContext) as AuthContextType;
 
   const handleUpdate = async () => {
     const updatedTask = await patchTask(tokens?.access!, {
@@ -86,13 +86,16 @@ export const TaskItem: FC<TaskItemProps> = ({ task }) => {
   return task ? (
     <li className="flex justify-between items-center mt-3">
       <div className={`${completed ? "line-through" : ""} flex items-center`}>
-        <input
-          type="checkbox"
-          name="done"
-          id={task.id + ""}
-          checked={completed}
-          onChange={() => handleUpdate()}
-        />
+        {isMod ? (
+          <input
+            type="checkbox"
+            name="done"
+            disabled={!isMod}
+            id={task.id + ""}
+            checked={completed}
+            onChange={() => handleUpdate()}
+          />
+        ) : null}
         <label
           className="capitalize ml-3 text-sm font-semibold"
           htmlFor={task.id + ""}
@@ -101,20 +104,22 @@ export const TaskItem: FC<TaskItemProps> = ({ task }) => {
         </label>
       </div>
       <div>
-        <button onClick={() => handleDelete()}>
-          <svg
-            className=" w-4 h-4 text-gray-600 fill-current"
-            // @click="deleteTodo(todo.id)"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
+        {isMod ? (
+          <button onClick={() => handleDelete()}>
+            <svg
+              className=" w-4 h-4 text-gray-600 fill-current"
+              // @click="deleteTodo(todo.id)"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        ) : null}
       </div>
     </li>
   ) : null;

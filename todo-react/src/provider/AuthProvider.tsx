@@ -14,6 +14,7 @@ export interface AuthContextType {
   logout: () => void;
   setTokens: React.Dispatch<React.SetStateAction<AuthToken>>;
   isAuth: boolean;
+  isMod: boolean;
 }
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -27,9 +28,8 @@ type Credentials = {
   password: string;
 };
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const login = async (credentials: Credentials) => {
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
   try {
     const { data, status } = await axios.post(
       `${BACKEND_URL}/token/`,
@@ -53,6 +53,7 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
 }) => {
   const [tokens, setTokens] = useState<AuthToken>(null);
   const [isAuth, setIsAuth] = useState(false);
+  const [isMod, setIsMod] = useState(false);
 
   useEffect(() => {
     const localToken = getLocalToken();
@@ -63,6 +64,23 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
   }, []);
 
   useEffect(() => {
+    try {
+      (async () => {
+        const { data } = await axios.get(`${BACKEND_URL}/permissions`, {
+          headers: {
+            Authorization: `Bearer ${tokens?.access}`,
+          },
+        });
+        if (data) {
+          setIsMod(data.is_mod);
+        }
+      })();
+    } catch (error) {
+      console.error(error);
+    }
+  }, [tokens?.access]);
+
+  useEffect(() => {
     if (!!tokens && tokens.access.length > 0) {
       setIsAuth(true);
     } else {
@@ -71,7 +89,9 @@ export const AuthContextProvider: FC<{ children: ReactNode }> = ({
   }, [tokens]);
 
   return (
-    <AuthContext.Provider value={{ tokens, login, logout, setTokens, isAuth }}>
+    <AuthContext.Provider
+      value={{ tokens, login, logout, setTokens, isAuth, isMod }}
+    >
       {children}
     </AuthContext.Provider>
   );
